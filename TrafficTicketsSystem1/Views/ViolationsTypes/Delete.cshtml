@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "Delete Violation Type";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Delete Violation Type</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="traffic-holder">
+        <div class="form-group row">
+            <label for="violationTypeId" class="col-md-3 top-pad">Violation Type Id:</label>
+            <div class="col-md-3"><input type="text" id="violationTypeId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnGetViolationType" class="btn btn-primary" value="Get Violation Type" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Volation Type:</label>
+            <div class="col-md-9"><span id="vType"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Description:</label>
+            <div class="col-md-9"><span id="describe"></span></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" name="btnRevokeRegistration" class="btn btn-primary" value="Revoke Vehicle Registration" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Violations Types", "Index") ::
+    @Html.ActionLink("New Violation Type", "Create") ::
+    @Html.ActionLink("Description of a Violation Type", "Details") ::
+    @Html.ActionLink("Edit/Update Violation Type", "Edit")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnGetViolationType").on("click", function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/ViolationTypes/" + $("#violationTypeId").val(),
+                success: function (data) {
+                    $("#violationTypeId").val(data.ViolationTypeId);
+                    $("#vType").text(data.ViolationName);
+                    $("#describe").text(data.Description);
+                }
+            });
+        });
+
+        $("input[value='Revoke Vehicle Registration']").on("click", function (event) {
+            var car = {
+                ViolationTypeId: $("#violationTypeId").val(),
+                ViolationName: $("#vType").text(),
+                Description: $("#describe").text()
+            };
+            $.ajax({
+                data: car,
+                method: "DELETE",
+                url: "/api/ViolationTypes/" + $("#violationTypeId").val(),
+                success: function (data) {
+                    alert("The violation type has been removed from our system.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

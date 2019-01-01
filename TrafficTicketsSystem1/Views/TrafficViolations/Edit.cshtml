@@ -1,0 +1,187 @@
+﻿
+@{
+    ViewBag.Title = "Edit/Update Violation Details";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Edit/Update Violation Details</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="traffic-holder">
+        <div class="form-group row">
+            <label for="infractionId" class="col-md-3 top-pad">Violation Id:</label>
+            <div class="col-md-3"><input type="text" id="infractionId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnLocateViolation" class="btn btn-primary" value="Locate Violation" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="cmrNbr" class="col-md-3 top-pad">Camera #:</label>
+            <div class="col-md-9"><input type="text" id="cmrNbr" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 top-pad">Camera Details:</label>
+            <div class="col-md-9"><input type="text" id="cmrDetails" class="form-control camera-details" disabled /></div>
+        </div>
+        <div class="form-group row">
+            <label for="tagNbr" class="col-md-3 top-pad">Vehicle Tag #:</label>
+            <div class="col-md-9"><input type="text" id="tagNbr" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 top-pad">Vehicle Details:</label>
+            <div class="col-md-9"><input type="text" name="vehicle" class="form-control" disabled /></div>
+        </div>
+        <div class="form-group row">
+            <label for="category" class="col-md-3 top-pad">Violation Type:</label>
+            <div class="col-md-9">
+                <select id="category" class="form-control">
+                    <option value="Unknown"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="county" class="col-md-3 top-pad">Violation Date:</label>
+            <div class="col-md-9"><input id="trafficDate" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="trafficTime" class="col-md-3 top-pad">Violation Time:</label>
+            <div class="col-md-9"><input type="time" id="trafficTime" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="photo" class="col-md-3 top-pad">Photo Available:</label>
+            <div class="col-md-9">
+                <select id="photo" class="form-control">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="photo" class="col-md-3 top-pad">Video Available:</label>
+            <div class="col-md-9">
+                <select id="video" class="form-control">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="pdd" class="col-md-3 top-pad">Payment Due Date:</label>
+            <div class="col-md-9"><input id="pdd" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="pmtDate" class="col-md-3 top-pad">Payment Date:</label>
+            <div class="col-md-9"><input id="pmtDate" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="pmtAmt" class="col-md-3 top-pad">Payment Amount:</label>
+            <div class="col-md-9"><input type="text" id="pmtAmt" class="form-control" /></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" id="btnUpdateViolation" class="btn btn-primary" value="Update Violation/Ticket" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Violations", "Index") ::
+    @Html.ActionLink("Process New Violation", "Create") ::
+    @Html.ActionLink("Traffic Violation Details", "Details") ::
+    @Html.ActionLink("Scrap Traffic Violation", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/ViolationTypes",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (index, category) {
+                    $("#category").append("<option value = '" + category["ViolationName"] + "'>" +
+                        category["ViolationName"] + "</option>");
+                });
+            }
+        });
+
+        $("#btnLocateViolation").click(function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/TrafficViolations/" + $("#infractionId").val(),
+                success: function (data) {
+                    $("#cmrNbr").val(data.CameraNumber);
+                    $("#tagNbr").val(data.TagNumber);
+                    if (data.ViolationName === "Speed") {
+                        $("#category").val("Speed");
+                    }
+                    else {
+                        $("#category").val(data.ViolationName);
+                    }
+                    $("#trafficDate").val(data.ViolationDate);
+                    $("#trafficTime").val(data.ViolationTime);
+                    $("#photo").val(data.PhotoAvailable);
+                    $("#video").val(data.VideoAvailable);
+                    $("#pdd").val(data.PaymentDueDate);
+                    $("#pmtDate").val(data.PaymentDate);
+                    $("#pmtAmt").val(data.PaymentAmount);
+                }
+            });
+
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/Cameras",
+                success: function (data) {
+                    $.each(data, function (index, device) {
+                        if (device["CameraNumber"] === $("#cmrNbr").val()) {
+                            $(".camera-details").val(device["Make"] + " " +
+                                device["Model"] + " (Location: " +
+                                device["Location"] + ")");
+                        }
+                    });
+                }
+            });
+
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/Vehicles",
+                success: function (data) {
+                    $.each(data, function (index, car) {
+                        if (car["TagNumber"] === $("#tagNbr").val()) {
+                            $("input[name='vehicle']").val(car["Make"] + " " +
+                                car["Model"] + " (" +
+                                car["VehicleYear"] + ", " + car["Color"] + ")");
+                        }
+                    });
+                }
+            });
+        });
+
+        $("#btnUpdateViolation").click(function (event) {
+            var ticket = {
+                TrafficViolationId: $("#infractionId").val(),
+                CameraNumber:       $("#cmrNbr").val(),
+                TagNumber:          $("#tagNbr").val(),
+                ViolationName:      $("#category").val(),
+                ViolationDate:      $("#trafficDate").val(),
+                ViolationTime:      $("#trafficTime").val(),
+                PhotoAvailable:     $("#photo").val(),
+                VideoAvailable:     $("#video").val(),
+                PaymentDueDate:     $("#pdd").val(),
+                PaymentDate:        $("#pmtDate").val(),
+                PaymentAmount:      $("#pmtAmt").val()
+            };
+            $.ajax({
+                data:   ticket,
+                method: "PUT",
+                url:    "/api/TrafficViolations/" + $("#infractionId").val(),
+                success: function (data) {
+                    alert("The information about the violation has been updated.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

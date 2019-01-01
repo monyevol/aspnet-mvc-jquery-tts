@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Traffic Violations";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Traffic Violations</h2>
+
+<table class="table table-striped common-font">
+    <tr>
+        <th class="bold text-center">Violation Id</th>
+        <th class="bold">Tag #</th>
+        <th class="bold">Camera #</th>
+        <th class="bold">Violation</th>
+        <th class="bold">Date</th>
+        <th class="bold">Time</th>
+        <th class="bold">Photo Available</th>
+        <th class="bold">Video Available</th>
+        <th class="bold">Payment Due Date</th>
+        <th class="bold">Payment Date</th>
+        <th class="bold">Payment Amount</th>
+    </tr>
+</table>
+
+<p class="text-center">
+    @Html.ActionLink("New Traffic Violation", "Create") ::
+    @Html.ActionLink("Traffic Violation Details", "Details") ::
+    @Html.ActionLink("Edit/Update Traffic Violation", "Edit") ::
+    @Html.ActionLink("Delete/Cancel Traffic Violation", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            method:   "GET",
+            dataType: "json",
+            url:      "/api/TrafficViolations",
+            success: function (data) {
+                $.each(data, function (index, ticket) {
+                    $(".table-striped").append("<tr>" +
+                        "<td class='text-center'>" + ticket["TrafficViolationId"] + "</td>" +
+                        "<td>" + ticket["CameraNumber"] + "</td>" +
+                        "<td>" + ticket["TagNumber"] + "</td>" +
+                        "<td>" + ticket["ViolationName"] + "</td>" +
+                        "<td>" + ticket["ViolationDate"] + "</td>" +
+                        "<td>" + ticket["ViolationTime"] + "</td>" +
+                        "<td>" + ticket["PhotoAvailable"] + "</td>" +
+                        "<td>" + ticket["VideoAvailable"] + "</td>" +
+                        "<td>" + ticket["PaymentDueDate"] + "</td>" +
+                        "<td>" + ticket["PaymentDate"] + "</td>" +
+                        "<td>" + ticket["PaymentAmount"] + "</td></tr>");
+                });
+            }
+        });
+    });
+</script>

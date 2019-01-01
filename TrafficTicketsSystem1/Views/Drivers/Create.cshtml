@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "New Vehicle Owner/Driver";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">New Vehicle Owner/Driver</h2>
+
+<form name="VehicleOwnerDriver" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="drvLicNbr" class="col-md-3 top-pad">Drv. Lic. #:</label>
+            <div class="col-md-9"><input type="text" id="drvLicNbr" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="fName" class="col-md-3 top-pad">First Name:</label>
+            <div class="col-md-9"><input type="text" id="fName" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="lName" class="col-md-3 top-pad">Last Name:</label>
+            <div class="col-md-9"><input type="text" id="lName" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="adrs" class="col-md-3 top-pad">Address:</label>
+            <div class="col-md-9"><input type="text" id="adrs" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="city" class="col-md-3 top-pad">City:</label>
+            <div class="col-md-9"><input type="text" id="city" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="county" class="col-md-3 top-pad">County:</label>
+            <div class="col-md-9"><input type="text" id="county" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="state" class="col-md-3 top-pad">State:</label>
+            <div class="col-md-9"><input type="text" id="state" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="zip" class="col-md-3 top-pad">ZIPCode:</label>
+            <div class="col-md-9"><input type="text" id="zip" class="form-control" /></div>
+        </div>
+        <p class="text-center"><input type="button" id="btnIssueDriversLicense" class="btn btn-primary" value="Issue a Driver's License" /></p>
+    </div>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Drivers/Owners", "Index") ::
+    @Html.ActionLink("Driver/Owner Details", "Read") ::
+    @Html.ActionLink("Edit/Update Driver/Owner Information", "Update") ::
+    @Html.ActionLink("Delete Drivers/Owner Record", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnIssueDriversLicense").click(function () {
+            var driver = {
+                DrvLicNumber: $("#drvLicNbr").val(),
+                FirstName:    $("#fName").val(),
+                LastName:     $("#lName").val(),
+                Address:      $("#adrs").val(),
+                City:         $("#city").val(),
+                County:       $("#county").val(),
+                State:        $("#state").val(),
+                ZIPCode:      $("#zip").val()
+            };
+
+            $.ajax({
+                method: "POST",
+                data:   driver,
+                url:    "/api/Drivers",
+                success: function (data) {
+                    alert("The driver's license has been issued.");
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

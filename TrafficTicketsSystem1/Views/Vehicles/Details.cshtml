@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "Vehicle Details";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Vehicle Details</h2>
+
+<form name="DriverOwner" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="cameraId" class="col-md-3 top-pad">Vehicle Id:</label>
+            <div class="col-md-3"><input type="text" id="carId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnGetVehicle" class="btn btn-primary" value="Get the Vehicle" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Tag #:</label>
+            <div class="col-md-9"><span class="tagNbr"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Drv. Lic. #:</label>
+            <div class="col-md-9"><span class="dln"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Make:</label>
+            <div class="col-md-9"><span class="make" /></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Model:</label>
+            <div class="col-md-9"><span class="mdl"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Year:</label>
+            <div class="col-md-9"><span class="year"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Color:</label>
+            <div class="col-md-9"><span class="color"></span></div>
+        </div>
+    </div>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Cameras", "Index") ::
+    @Html.ActionLink("New Traffic Camera", "Create") ::
+    @Html.ActionLink("Edit/Update Camera Information", "Edit") ::
+    @Html.ActionLink("Remove Traffic Camera", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".btn-primary").on("click", function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url: "/api/Vehicles/" + $(".small").val(),
+                success: function (data) {
+                    $("span.tagNbr").text(data.TagNumber);
+                    $("span.dln").text(data.DrvLicNumber);
+                    $("span.make").text(data.Make);
+                    $("span.mdl").text(data.Model);
+                    $("span.year").text(data.VehicleYear);
+                    $("span.color").text(data.Color);
+                }
+            });
+        });
+    });
+</script>

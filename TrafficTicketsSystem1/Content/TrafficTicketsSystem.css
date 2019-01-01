@@ -1,0 +1,37 @@
+﻿body {
+    background-color: #FFF;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.blue {
+    color: #0d3bcf;
+}
+
+.bottom-border {
+    border-bottom: 1px solid #0d3bcf;
+}
+
+.box-holder {
+    margin: auto;
+    width: 400px;
+}
+
+.traffic-holder {
+    margin: auto;
+    width: 450px;
+}
+
+.top-pad {
+    padding-top: 0.50em;
+}
+
+.small {
+    width: 50px;
+}
+
+.common-font {
+    font-family: Georgia, Garamond, 'Times New Roman', serif;
+}

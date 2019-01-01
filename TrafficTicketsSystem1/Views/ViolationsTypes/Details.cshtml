@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Volation Type Details";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Volation Type Details</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="cameraId" class="col-md-3 top-pad">Volation Type ID:</label>
+            <div class="col-md-3"><input type="text" id="categoryId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnFindVolationType" class="btn btn-primary" value="Find Camera" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="cameraNumber" class="col-md-3 top-pad">Volation Type:</label>
+            <div class="col-md-9"><input type="text" id="vType" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="describe" class="col-md-3 top-pad">Description:</label>
+            <div class="col-md-9"><textarea id="describe" class="form-control" rows="5"></textarea></div>
+        </div>
+    </div>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Violations Types", "Index") ::
+    @Html.ActionLink("New Violation Type", "Create") ::
+    @Html.ActionLink("Edit/Update Violation Type", "Edit") ::
+    @Html.ActionLink("Exclude Violation Type", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnFindVolationType").click(function (event) {
+            $.ajax({
+                url: "/api/ViolationTypes/" + $("#categoryId").val(),
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("#categoryId").val(data.ViolationTypeId);
+                    $("#vType").val(data.ViolationName);
+                    $("#describe").val(data.Description);
+                }
+            });
+        });
+    });
+</script>

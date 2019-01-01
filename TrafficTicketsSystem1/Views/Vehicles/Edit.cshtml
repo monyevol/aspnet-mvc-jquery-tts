@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewBag.Title = "Edit/Update Vehicle Information";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Edit/Update Vehicle Information</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="carId" class="col-md-3 top-pad">Vehicle Id:</label>
+            <div class="col-md-3"><input type="text" id="carId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnLocateVehicle" class="btn btn-primary" value="Locate Vehicle/Car" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="drvLicNbr" class="col-md-3 top-pad">Drv. Lic. #:</label>
+            <div class="col-md-9"><input type="text" id="drvLicNbr" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="owner" class="col-md-3 top-pad">Owner/Driver:</label>
+            <div class="col-md-9"><input type="text" id="owner" name="owner" class="form-control" disabled /></div>
+        </div>
+        <div class="form-group row">
+            <label for="tagNbr" class="col-md-3 top-pad">Vehicle Tag #:</label>
+            <div class="col-md-9"><input type="text" id="tagNbr" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="make" class="col-md-3 top-pad">Make:</label>
+            <div class="col-md-9"><input type="text" id="make" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="model" class="col-md-3 top-pad">Model:</label>
+            <div class="col-md-9"><input type="text" id="model" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="year" class="col-md-3 top-pad">Year:</label>
+            <div class="col-md-9"><input type="text" id="year" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="color" class="col-md-3 top-pad">Color:</label>
+            <div class="col-md-9"><input type="text" id="color" class="form-control" /></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" id="btnUpdateRecord" class="btn btn-primary" value="Update Camera Details" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Vehicles Registrations", "Index") ::
+    @Html.ActionLink("Create Vehicle Registration", "Edit") ::
+    @Html.ActionLink("Vehicle Registration Details", "Details") ::
+    @Html.ActionLink("Delete Vehicle Registration", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnLocateVehicle").click(function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/Vehicles/" + $("#carId").val(),
+                success: function (data) {
+                    $("#tagNbr").val(data.TagNumber);
+                    $("#drvLicNbr").val(data.DrvLicNumber);
+                    $("#make").val(data.Make);
+                    $("#model").val(data.Model);
+                    $("#year").val(data.VehicleYear);
+                    $("#color").val(data.Color);
+                }
+            });
+
+            $.ajax({
+                method: "GET",
+                dataType: "json",
+                url: "/api/Drivers",
+                success: function (data) {
+                    $.each(data, function (index, person) {
+                        if (person["DrvLicNumber"] === $("#drvLicNbr").val()) {
+                            $("input[id='owner']").val(person["FirstName"] + " " +
+                                person["LastName"] + " (Drv. Lic. #: " +
+                                person["DrvLicNumber"] + ")");
+                        } // If
+                    }); // Each
+                } // Successful AJAX
+            }); // $.ajax
+        });
+
+        $("#btnUpdateRecord").click(function (event) {
+            var car = {
+                VehicleId: $("#carId").val(),
+                TagNumber: $("#tagNbr").val(),
+                DrvLicNumber: $("#drvLicNbr").val(),
+                Make: $("#make").val(),
+                Model: $("#model").val(),
+                VehicleYear: $("#year").val(),
+                Color: $("#color").val()
+            };
+            $.ajax({
+                data: car,
+                method: "PUT",
+                url: "/api/Vehicles/" + $("#carId").val(),
+                success: function (data) {
+                    alert("The information about the vehicle has been updated.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

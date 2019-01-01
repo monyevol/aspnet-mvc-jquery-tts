@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewBag.Title = "Edit/Update Camera Information";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Edit/Update Camera Information</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="cameraId" class="col-md-3 top-pad">Camera ID:</label>
+            <div class="col-md-3"><input type="text" id="cameraId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnFindRecord" class="btn btn-primary" value="Find Camera" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="cameraNumber" class="col-md-3 top-pad">Camera #:</label>
+            <div class="col-md-9"><input type="text" id="cameraNumber" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="make" class="col-md-3 top-pad">Make:</label>
+            <div class="col-md-9"><input type="text" id="make" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="model" class="col-md-3 top-pad">Model:</label>
+            <div class="col-md-9"><input type="text" id="model" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="location" class="col-md-3 top-pad">Location:</label>
+            <div class="col-md-9"><input type="text" id="location" class="form-control" /></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" id="btnUpdateRecord" class="btn btn-primary" value="Update Camera Details" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Cameras", "Index") ::
+    @Html.ActionLink("New Traffic Camera", "Create") ::
+    @Html.ActionLink("Traffic Camera Details", "Details") ::
+    @Html.ActionLink("Remove Traffic Camera", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnFindRecord").click(function (event) {
+            $.ajax({
+                url: "/api/Cameras/" + $("#cameraId").val(),
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("#cameraNumber").val(data.CameraNumber);
+                    $("#make").val(data.Make);
+                    $("#model").val(data.Model);
+                    $("#location").val(data.Location);
+                }
+            });
+        });
+
+        $("#btnUpdateRecord").click(function (event) {
+            var camera = {
+                CameraID: $("#cameraId").val(),
+                CameraNumber: $("#cameraNumber").val(),
+                Make: $("#make").val(),
+                Model: $("#model").val(),
+                Location: $("#location").val()
+            };
+            $.ajax({
+                url: "/api/Cameras/" + $("#cameraId").val(),
+                method: "PUT",
+                data: camera,
+                success: function (data) {
+                    alert("The traffic camera data has been updated and saved.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Traffic Violation Type";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Traffic Violation Type</h2>
+
+<form name="ViolationType" method="post">
+    <div class="traffic-holder">
+        <div class="form-group row">
+            <label for="vName" class="col-md-3 top-pad">Violation Name:</label>
+            <div class="col-md-9"><input type="text" id="vName" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="describe" class="col-md-3 top-pad">Description:</label>
+            <div class="col-md-9"><textarea id="describe" rows="10" class="form-control"></textarea></div>
+        </div>
+
+        <p class="text-center"><input type="button" id="btnDefineViolationType" class="btn btn-primary" value="Create Traffic Camera" /></p>
+    </div>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Violations Types", "Index") ::
+    @Html.ActionLink("Details on Violation Type", "Details") ::
+    @Html.ActionLink("Edit/Update Violation Type", "Edit") ::
+    @Html.ActionLink("Remove Violation Type", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnDefineViolationType").click(function () {
+            var camera = {
+                ViolationName: $("#vName").val(),
+                Description: $("#describe").val()
+            };
+
+            $.ajax({
+                url: "/api/ViolationTypes",
+                method: "POST",
+                data: camera,
+                success: function (data) {
+                    alert("The violation type has been defined.");
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "Driver/Owner Details";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Driver/Owner Details</h2>
+
+<form name="DriverOwner" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="cameraId" class="col-md-3 top-pad">Driver ID:</label>
+            <div class="col-md-3"><input type="text" id="driverId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnLocateDriver" class="btn btn-primary" value="Locate Driver/Owner" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Drv. Lic. #:</label>
+            <div class="col-md-9"><span id="drvLicNbr"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">First Name:</label>
+            <div class="col-md-9"><span id="fname"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Last Name:</label>
+            <div class="col-md-9"><span id="lname" /></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Address:</label>
+            <div class="col-md-9"><span id="adrs"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">City:</label>
+            <div class="col-md-9"><span id="city"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">County:</label>
+            <div class="col-md-9"><span id="county"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">State:</label>
+            <div class="col-md-9"><span id="state"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">ZIP-Code:</label>
+            <div class="col-md-9"><span id="zip"></span></div>
+        </div>
+    </div>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Cameras", "Index") ::
+    @Html.ActionLink("New Traffic Camera", "Create") ::
+    @Html.ActionLink("Edit/Update Camera Information", "Edit") ::
+    @Html.ActionLink("Remove Traffic Camera", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".btn-primary").on("click", function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/Drivers/" + $("input[id='driverId']").val(),
+                success: function (data) {
+                    $("span[id='drvLicNbr']").text(data.DrvLicNumber);
+                    $("span[id='fname']").text(data.FirstName);
+                    $("span[id='lname']").text(data.LastName);
+                    $("span[id='adrs']").text(data.Address);
+                    $("span[id='city']").text(data.City);
+                    $("span[id='county']").text(data.County);
+                    $("span[id='state']").text(data.State);
+                    $("span[id='zip']").text(data.ZIPCode);
+                }
+            });
+        });
+    });
+</script>

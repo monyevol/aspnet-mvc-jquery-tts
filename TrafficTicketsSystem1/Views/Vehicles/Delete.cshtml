@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "Remove Vehicle Registration";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Revoke Vehicle Registration</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="traffic-holder">
+        <div class="form-group row">
+            <label for="carId" class="col-md-3 top-pad">Vehicle Id:</label>
+            <div class="col-md-3"><input type="text" name="carId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" name="btnFindVehicleRegistration" class="btn btn-primary" value="Find Vehicle Registration" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Vehicle Tag #:</label>
+            <div class="col-md-9"><span name="tagNbr"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Owner Drv. Lic. #:</label>
+            <div class="col-md-9"><span name="dln"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Make:</label>
+            <div class="col-md-9"><span name="manufacturer"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Model:</label>
+            <div class="col-md-9"><span name="model"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Year:</label>
+            <div class="col-md-9"><span name="yr"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Color:</label>
+            <div class="col-md-9"><span name="color"></span></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" name="btnRevokeRegistration" class="btn btn-primary" value="Revoke Vehicle Registration" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Vehicles Registrations", "Index") :: ::
+    @Html.ActionLink("Create Vehicle Registration", "Create")
+    @Html.ActionLink("Vehicle Registration Details", "Details") ::
+    @Html.ActionLink("Edit/Update Vehicle Registration", "Edit")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[value='Find Vehicle Registration']").on("click", function (event) {
+            $.ajax({
+                url:      "/api/Vehicles/" + $("input[name='carId']").val(),
+                method:   "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("span[name='tagNbr']").text(data.TagNumber);
+                    $("span[name='dln']").text(data.DrvLicNumber);
+                    $("span[name='manufacturer']").text(data.Make);
+                    $("span[name='model']").text(data.Model);
+                    $("span[name='yr']").text(data.VehicleYear);
+                    $("span[name='color']").text(data.Color);
+                }
+            });
+        });
+
+        $("input[value='Revoke Vehicle Registration']").on("click", function (event) {
+            var car = {
+                VehicleID:    $("input[name='carId']").val(),
+                TagNumber:    $("span[name='tagNbr']").val(),
+                DrvLicNumber: $("span[name='dln']").val(),
+                Make:         $("span[name='manufacturer']").val(),
+                Model:        $("span[name='model']").val(),
+                VehicleYear:  $("span[name='yr']").val(),
+                Color:        $("span[name='color']").val()
+            };
+            $.ajax({
+                data:   car,
+                method: "DELETE",
+                url:    "/api/Vehicles/" + $("input[name='carId']").val(),
+                success: function (data) {
+                    alert("The vehicle registration has been cancelled.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

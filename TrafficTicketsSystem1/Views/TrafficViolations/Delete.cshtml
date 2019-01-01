@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "Violation/Infraction Details";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Violation/Infraction Details</h2>
+
+<form name="DriverOwner" method="post">
+    <div class="vehicle-holder">
+        <div class="form-group row">
+            <label for="cameraId" class="col-md-3 top-pad">Violation Id:</label>
+            <div class="col-md-3"><input type="text" id="infractionId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnShowViolation" class="btn btn-primary" value="Show the Violation" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Camera:</label>
+            <div class="col-md-8"><span name="capturingCamera"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Vehicle Tag #:</label>
+            <div class="col-md-8"><span name="violatingVehicle"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Violation Type:</label>
+            <div class="col-md-8"><span name="InfrationCategory" /></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Violation Date:</label>
+            <div class="col-md-8"><span name="date-of-infraction"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Violation Time:</label>
+            <div class="col-md-8"><span name="time-of-infraction"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Photo is Available:</label>
+            <div class="col-md-8"><span name="steady-photo-available"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Video is Available:</label>
+            <div class="col-md-8"><span name="streaming-video-available"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Payment Due Date:</label>
+            <div class="col-md-8"><span name="payment due date"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Payment Date:</label>
+            <div class="col-md-8"><span name="last-day-payment"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4">Amount Owed:</label>
+            <div class="col-md-8"><span name="amount-owed"></span></div>
+        </div>
+    </div>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Violations", "Index") ::
+    @Html.ActionLink("New Traffic Violation", "Create") ::
+    @Html.ActionLink("Edit/Update Traffic Violation", "Edit") ::
+    @Html.ActionLink("Delete/Cancel Traffic Violation", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".btn-primary").on("click", function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url: "/api/TrafficViolations/" + $("#infractionId").val(),
+                success: function (data) {
+                    $("span[name$='Camera']").text(data.CameraNumber);
+                    $("span[name$='Vehicle']").text(data.TagNumber);
+                    $("span[name$='Category']").text(data.ViolationName);
+                    $("span[name|='date']").text(data.ViolationDate);
+                    $("span[name|='time']").text(data.ViolationTime);
+                    $("span[name*='photo']").text(data.PhotoAvailable);
+                    $("span[name*='video']").text(data.VideoAvailable);
+                    $("span[name~='due']").text(data.PaymentDueDate);
+                    $("span[name='last-day-payment']").text(data.PaymentDate);
+                    $("span[name='amount-owed']").text(data.PaymentAmount);
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "Traffic Cameras";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Traffic Cameras</h2>
+
+<table class="table table-striped common-font">
+    <tr>
+        <th class="bold text-center">Camera Id</th>
+        <th class="bold">Camera #</th>
+        <th class="bold">Make</th>
+        <th class="bold">Model</th>
+        <th class="bold">Location</th>
+    </tr>
+</table>
+
+<p class="text-center">
+    @Html.ActionLink("New Traffic Camera", "Create") ::
+    @Html.ActionLink("Traffic Camera Details", "Details") ::
+    @Html.ActionLink("Edit/Update Camera Information", "Edit") ::
+    @Html.ActionLink("Remove Traffic Camera", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/Cameras",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (index, camera) {
+                    $("table").append("<tr>"            +
+                        "<td class='text-center'>" + camera["CameraId"]     + "</td>" +
+                        "<td>" + camera["CameraNumber"] + "</td>" +
+                        "<td>" + camera["Make"]         + "</td>" +
+                        "<td>" + camera["Model"]        + "</td>" +
+                        "<td>" + camera["Location"]     + "</td></tr>");
+                });
+            }
+        });
+    });
+</script>

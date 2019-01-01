@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Traffic Violations Types";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Traffic Violations Types</h2>
+
+<table class="table table-striped common-font">
+    <tr>
+        <th class="bold text-center">Violation Type Id</th>
+        <th class="bold">Violation Name</th>
+        <th class="bold">Description</th>
+    </tr>
+</table>
+
+<p class="text-center">
+    @Html.ActionLink("New Violation Type", "Create") ::
+    @Html.ActionLink("Details on Violation Type", "Details") ::
+    @Html.ActionLink("Edit/Update Violation Type", "Edit") ::
+    @Html.ActionLink("Exclude Violation Type", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/ViolationTypes",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (index, category) {
+                    $("table").append("<tr>"               +
+                        "<td class='text-center'>" + category["ViolationTypeId"] + "</td>" +
+                        "<td>" + category["ViolationName"]   + "</td>" +
+                        "<td>" + category["Description"]     + "</td></tr>");
+                });
+            }
+        });
+    });
+</script>

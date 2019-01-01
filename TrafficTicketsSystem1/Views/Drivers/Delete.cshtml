@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "Delete Driver";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Delete Driver's Record</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="vehicle-holder">
+        <div class="form-group row">
+            <label for="driverId" class="col-md-3 top-pad">Driver ID:</label>
+            <div class="col-md-3"><input type="text" id="driverId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" name="btnFindDriver" class="btn btn-primary" value="Find Driver's Record" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Drv. Lic. #:</label>
+            <div class="col-md-9"><span id="dln"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">First Name:</label>
+            <div class="col-md-9"><span id="fname"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Last Name:</label>
+            <div class="col-md-9"><span id="lname"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Address:</label>
+            <div class="col-md-9"><span name="adrs"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">City:</label>
+            <div class="col-md-9"><span name="city"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">County:</label>
+            <div class="col-md-9"><span name="county"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">State:</label>
+            <div class="col-md-9"><span name="state"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">ZIP-Code:</label>
+            <div class="col-md-9"><span name="zip"></span></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" name="btnRevokeRegistration" class="btn btn-primary" value="Revoke Vehicle Registration" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Drivers/Owners", "Index") :: ::
+    @Html.ActionLink("Create Drivers/Owner Record", "Create")
+    @Html.ActionLink("Driver/Owner Details", "Details") ::
+    @Html.ActionLink("Edit/Update Driver/Owner Information", "Edit")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[class='btn btn-primary']").on("click", function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/Drivers/" + $("input[id='driverId']").val(),
+                success: function (data) {
+                    $("span[id='dln']").text(data.DrvLicNumber);
+                    $("span[id='fname']").text(data.FirstName);
+                    $("span[id='lname']").text(data.LastName);
+                    $("span[name='adrs']").text(data.Address);
+                    $("span[name='city']").text(data.City);
+                    $("span[name='county']").text(data.County);
+                    $("span[name='state']").text(data.State);
+                    $("span[name='zip']").text(data.ZIPCode);
+                }
+            });
+        });
+
+        $("input[value='Revoke Vehicle Registration']").on("click", function (event) {
+            var car = {
+                DriverID:     $("input[class='form-control small']").val(),
+                DrvLicNumber: $("span[id='dln']").val(),
+                FirstName:    $("span[id='fname']").val(),
+                LastName:     $("span[id='lname']").val(),
+                Address:      $("span[name='adrs']").val(),
+                City:         $("span[name='city']").val(),
+                County:       $("span[name='county']").val(),
+                State:        $("span[name='state']").val(),
+                ZIPCode:      $("span[name='zip']").val()
+            };
+            $.ajax({
+                data:   car,
+                method: "DELETE",
+                url: "/api/Drivers/" + $("input[class='form-control small']").val(),
+                success: function (data) {
+                    alert("The driver's record has been deleted.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

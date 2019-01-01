@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "Vehicles Registrations";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Vehicles Registrations</h2>
+
+<table class="table table-striped common-font">
+    <tr>
+        <th class="bold text-center">Vehicle Id</th>
+        <th class="bold">Tag #</th>
+        <th class="bold">Drv. Lic. #</th>
+        <th class="bold">Make</th>
+        <th class="bold">Model</th>
+        <th class="bold">Year</th>
+        <th class="bold">Color</th>
+    </tr>
+</table>
+
+<p class="text-center">
+    @Html.ActionLink("New Vehicle Registration", "Create") ::
+    @Html.ActionLink("Vehicle Registration Details", "Edit") ::
+    @Html.ActionLink("Edit/Update Vehicle Registration Details", "Edit") ::
+    @Html.ActionLink("Delete Vehicle Registration", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            method:   "GET",
+            dataType: "json",
+            url:      "/api/Vehicles",
+            success: function (data) {
+                $.each(data, function (index, car) {
+                    $("table").append("<tr>"         +
+                        "<td class='text-center'>" + car["VehicleId"]    + "</td>" +
+                        "<td>" + car["TagNumber"]    + "</td>" +
+                        "<td>" + car["DrvLicNumber"] + "</td>" +
+                        "<td>" + car["Make"]         + "</td>" +
+                        "<td>" + car["Model"]        + "</td>" +
+                        "<td>" + car["VehicleYear"]  + "</td>" +
+                        "<td>" + car["Color"]        + "</td></tr>");
+                });
+            }
+        });
+    });
+</script>

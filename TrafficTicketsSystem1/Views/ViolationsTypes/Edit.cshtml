@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Edit/Update Violation Type";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Edit/Update Violation Type</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="cameraId" class="col-md-3 top-pad">Violation Type ID:</label>
+            <div class="col-md-3"><input type="text" id="vTypeId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnSearchType" class="btn btn-primary" value="Find Violation Type" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="category" class="col-md-3 top-pad">Violation Type:</label>
+            <div class="col-md-9"><input type="text" id="category" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="describe" class="col-md-3 top-pad">Description:</label>
+            <div class="col-md-9"><textarea id="describe" class="form-control"></textarea></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" id="btnUpdateViolationType" class="btn btn-primary" value="Update Violation Type" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Violations Types", "Index") ::
+    @Html.ActionLink("New Violation Type", "Create") ::
+    @Html.ActionLink("Details on Violation Type", "Details") ::
+    @Html.ActionLink("Remove Violation Type", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSearchType").click(function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/ViolationTypes/" + $("#vTypeId").val(),
+                success: function (data) {
+                    $("#category").val(data.ViolationName);
+                    $("#describe").val(data.Description);
+                }
+            });
+        });
+
+        $("#btnUpdateViolationType").click(function (event) {
+            var infraction = {
+                ViolationTypeID: $("#vTypeId").val(),
+                ViolationName:   $("#category").val(),
+                Description:     $("#describe").val()
+            };
+            $.ajax({
+                method: "PUT",
+                data:   infraction,
+                url:    "/api/ViolationTypes/" + $("#vTypeId").val(),
+                success: function (data) {
+                    alert("The violation type has been updated.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

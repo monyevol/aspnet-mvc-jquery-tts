@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "New Vehicle Registration";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">New Vehicle Registration</h2>
+
+<form name="VehicleRegistration" method="post">
+    <div class="traffic-holder">
+        <div class="form-group row">
+            <label for="tagNbr" class="col-md-3 top-pad">Vehicle Tag #:</label>
+            <div class="col-md-9"><input type="text" id="tagNbr" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="drvLicNbr" class="col-md-3 top-pad">Drv. Lic. #:</label>
+            <div class="col-md-9"><input type="text" id="drvLicNbr" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="owner" class="col-md-3 top-pad">Owner/Driver:</label>
+            <div class="col-md-9"><input type="text" id="owner" name="owner" class="form-control" disabled /></div>
+        </div>
+        <div class="form-group row">
+            <label for="make" class="col-md-3 top-pad">Make:</label>
+            <div class="col-md-9"><input type="text" id="make" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="model" class="col-md-3 top-pad">Model:</label>
+            <div class="col-md-9"><input type="text" id="model" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="year" class="col-md-3 top-pad">Year:</label>
+            <div class="col-md-9"><input type="text" id="year" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="clr" class="col-md-3 top-pad">Color:</label>
+            <div class="col-md-9"><input type="text" id="clr" class="form-control" /></div>
+        </div>
+
+        <p class="text-center"><input type="button" id="btnRegisterVehicle" class="btn btn-primary" value="Register this Vehicle" /></p>
+    </div>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Vehicles Registrations", "Index") ::
+    @Html.ActionLink("Vehicle Registration Details", "Details") ::
+    @Html.ActionLink("Edit/Update Vehicle Registration", "Edit") ::
+    @Html.ActionLink("Delete Vehicle Registration", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#drvLicNbr").blur(function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url:      "/api/Drivers",
+                success: function (data) {
+                    $.each(data, function (index, person) {
+                        if (person["DrvLicNumber"] === $("#drvLicNbr").val()) {
+                            $("input[id='owner']").val(person["FirstName"] + " " +
+                                                       person["LastName"] + " (Drv. Lic. #: " +
+                                                       person["DrvLicNumber"] + ")");
+                        }
+                    });
+                }
+            });
+        }); // Driver's License Number Lost Focus
+
+
+        $("#btnRegisterVehicle").click(function () {
+            var car = {
+                TagNumber:    $("#tagNbr").val(),
+                DrvLicNumber: $("#drvLicNbr").val(),
+                Make:         $("#make").val(),
+                Model:        $("#model").val(),
+                VehicleYear:  $("#year").val(),
+                Color:        $("#clr").val()
+            };
+
+            $.ajax({
+                data:   car,
+                method: "POST",
+                url:    "/api/Vehicles",
+                success: function (data) {
+                    alert("The vehicle has been registered.");
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

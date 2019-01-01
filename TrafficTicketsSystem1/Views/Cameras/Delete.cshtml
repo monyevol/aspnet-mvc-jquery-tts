@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Remove Traffic Camera";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Traffic Camera Removal</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="cameraId" class="col-md-3 top-pad">Camera Id:</label>
+            <div class="col-md-3"><input type="text" id="cameraId" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnFindRecord" class="btn btn-primary" value="Find Camera" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Camera #:</label>
+            <div class="col-md-9"><span id="cameraNumber"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Make:</label>
+            <div class="col-md-9"><span id="make"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Model:</label>
+            <div class="col-md-9"><span id="model"></span></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3">Location:</label>
+            <div class="col-md-9"><span id="location"></span></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" id="btnDeleteRecord" class="btn btn-primary" value="Remove Traffic Camera" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Traffic Cameras", "Index") ::
+    @Html.ActionLink("New Traffic Camera", "Create") ::
+    @Html.ActionLink("Traffic Camera Details", "Details") ::
+    @Html.ActionLink("Edit/Update Camera Information", "Edit")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnFindRecord").click(function (event) {
+            $.ajax({
+                url: "/api/Cameras/" + $("#cameraId").val(),
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("#cameraId").val(data.CameraId);
+                    $("#cameraNumber").text(data.CameraNumber);
+                    $("#make").text(data.Make);
+                    $("#model").text(data.Model);
+                    $("#location").text(data.Location);
+                }
+            });
+        });
+
+        $("#btnDeleteRecord").click(function (event) {
+            var camera = {
+                CameraID:     $("#cameraId").val(),
+                CameraNumber: $("#cameraNumber").val(),
+                Make:         $("#make").val(),
+                Model:        $("#model").val(),
+                Location:     $("#location").val()
+            };
+            $.ajax({
+                url: "/api/Cameras/" + $("#cameraId").val(),
+                method: "DELETE",
+                data: camera,
+                success: function (data) {
+                    alert("The traffic camera record has been removed.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Vehicles Owners/Drivers";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Vehicles Owners/Drivers</h2>
+
+<table class="table table-striped common-font">
+    <tr>
+        <th class="bold text-center">Driver Id</th>
+        <th class="bold">Drv. Lic. #</th>
+        <th class="bold">First Name</th>
+        <th class="bold">Last Name</th>
+        <th class="bold">Address</th>
+        <th class="bold">City</th>
+        <th class="bold">County</th>
+        <th class="bold">State</th>
+        <th class="bold">ZIP-Code</th>
+    </tr>
+</table>
+
+<p class="text-center">
+    @Html.ActionLink("New Driver/Owner", "Create") ::
+    @Html.ActionLink("Driver/Owner Details", "Read") ::
+    @Html.ActionLink("Edit/Update Driver/Owner Information", "Update") ::
+    @Html.ActionLink("Revoke Driver's License", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            method:   "GET",
+            dataType: "json",
+            url:      "/api/Drivers",
+            success: function (data) {
+                $.each(data, function (index, person) {
+                    $("table").append("<tr>" +
+                        "<td class='text-center'>" + person["DriverId"]     + "</td>" +
+                        "<td>" + person["DrvLicNumber"] + "</td>" +
+                        "<td>" + person["FirstName"]    + "</td>" +
+                        "<td>" + person["LastName"]     + "</td>" +
+                        "<td>" + person["Address"]      + "</td>" +
+                        "<td>" + person["City"]         + "</td>" +
+                        "<td>" + person["County"]       + "</td>" +
+                        "<td>" + person["State"]        + "</td>" +
+                        "<td>" + person["ZIPCode"]      + "</td></tr>");
+                });
+            }
+        });
+    });
+</script>

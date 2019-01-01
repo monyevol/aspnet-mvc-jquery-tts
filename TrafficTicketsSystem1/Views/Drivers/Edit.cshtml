@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Edit/Update Driver Information";
+}
+
+<h2 class="text-center bold common-font blue bottom-border">Edit/Update Driver Information</h2>
+
+<form name="TrafficCamera" method="post">
+    <div class="box-holder">
+        <div class="form-group row">
+            <label for="chauffeur" class="col-md-3 top-pad">Driver ID:</label>
+            <div class="col-md-3"><input type="text" id="chauffeur" class="form-control small" /></div>
+            <div class="col-md-3">
+                <input type="button" id="btnGetDriver" class="btn btn-primary" value="Find Driver" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="drvLicNbr" class="col-md-3 top-pad">Drv. Lic. #:</label>
+            <div class="col-md-9"><input type="text" id="drvLicNbr" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="fName" class="col-md-3 top-pad">First Name:</label>
+            <div class="col-md-9"><input type="text" id="fName" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="lName" class="col-md-3 top-pad">Last Name:</label>
+            <div class="col-md-9"><input type="text" id="lName" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="adrs" class="col-md-3 top-pad">Address:</label>
+            <div class="col-md-9"><input type="text" id="adrs" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="city" class="col-md-3 top-pad">City:</label>
+            <div class="col-md-9"><input type="text" id="city" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="county" class="col-md-3 top-pad">County:</label>
+            <div class="col-md-9"><input type="text" id="county" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="state" class="col-md-3 top-pad">State:</label>
+            <div class="col-md-9"><input type="text" id="state" class="form-control" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="zip" class="col-md-3 top-pad">ZIP-Code:</label>
+            <div class="col-md-9"><input type="text" id="zip" class="form-control" /></div>
+        </div>
+    </div>
+    <p class="text-center"><input type="button" id="btnUpdateRecord" class="btn btn-primary" value="Update Camera Details" /></p>
+</form>
+
+<p class="text-center">
+    @Html.ActionLink("Drivers/Owners", "Index") ::
+    @Html.ActionLink("New Driver", "Create") ::
+    @Html.ActionLink("Driver/Owner Details", "Details") ::
+    @Html.ActionLink("Delete Drivers/Owner Record", "Delete")
+</p>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnGetDriver").click(function (event) {
+            $.ajax({
+                method:   "GET",
+                dataType: "json",
+                url: "/api/Drivers/" + $("#chauffeur").val(),
+                success: function (data) {
+                    $("#tagNbr").val(data.TagNumber);
+                    $("#drvLicNbr").val(data.DrvLicNumber);
+                    $("#fName").val(data.FirstName);
+                    $("#lName").val(data.LastName);
+                    $("#adrs").val(data.Address);
+                    $("#city").val(data.City);
+                    $("#county").val(data.County);
+                    $("#state").val(data.State);
+                    $("#zip").val(data.ZIPCode);
+                }
+            });
+        });
+
+        $("#btnUpdateRecord").click(function (event) {
+            var dvr = {
+                DriverID:     $("#chauffeur").val(),
+                DrvLicNumber: $("#drvLicNbr").val(),
+                FirstName:    $("#fName").val(),
+                LastName:     $("#lName").val(),
+                Address:      $("#adrs").val(),
+                TagNumber:    $("#tagNbr").val(),
+                City:         $("#city").val(),
+                County:       $("#county").val(),
+                State:        $("#state").val(),
+                ZIPCode:      $("#zip").val()
+            };
+            $.ajax({
+                data: dvr,
+                method: "PUT",
+                url: "/api/Drivers/" + $("#chauffeur").val(),
+                success: function (data) {
+                    alert("The driver/owner information is no up-to-date.")
+
+                    window.location.href = 'Index';
+                }
+            });
+        });
+    });
+</script>
